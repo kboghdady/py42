@@ -293,7 +293,7 @@ class RestoreJobManager(_RestorePoller):
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         size = sum([fs.size for fs in file_selections])
         zip_result = _check_for_multiple_files(file_selections) or None
-        return self._storage_archive_client.start_restore(
+        return self._storage_archive_client.start_web_restore(
             guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
             path_set=[fs.path_set for fs in file_selections],

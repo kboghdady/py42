@@ -383,7 +383,7 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
         start_restore_response.status_code = 200
         return Py42Response(start_restore_response)
 
-    storage_archive_client.start_restore.side_effect = mock_start_restore
+    storage_archive_client.start_web_restore.side_effect = mock_start_restore
 
 
 def mock_get_restore_status_responses(mocker, storage_archive_client, json_responses):
@@ -980,7 +980,7 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
 
-    def test_get_stream_calls_start_restore_with_correct_args(
+    def test_get_stream_calls_start_web_restore_with_correct_args(
         self, mocker, storage_archive_client, single_file_selection
     ):
         mock_start_restore_response(
@@ -993,7 +993,7 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_file_selection)
-        storage_archive_client.start_restore.assert_called_once_with(
+        storage_archive_client.start_web_restore.assert_called_once_with(
             guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[single_file_selection[0].path_set],
@@ -1004,7 +1004,7 @@ class TestRestoreJobManager(object):
             zip_result=None,
         )
 
-    def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_args(
+    def test_get_stream_when_multiple_files_selected_calls_start_web_restore_with_correct_args(
         self, mocker, storage_archive_client, double_file_selection
     ):
         mock_start_restore_response(
@@ -1018,7 +1018,7 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(double_file_selection)
-        storage_archive_client.start_restore.assert_called_once_with(
+        storage_archive_client.start_web_restore.assert_called_once_with(
             guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[
@@ -1096,7 +1096,7 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_file_selection)
-        actual = storage_archive_client.start_restore.call_args[1]["zip_result"]
+        actual = storage_archive_client.start_web_restore.call_args[1]["zip_result"]
         assert actual is None
 
     def test_get_stream_when_is_directory_type_sets_zip_result_to_true(
@@ -1115,5 +1115,5 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_dir_selection)
-        actual = storage_archive_client.start_restore.call_args[1]["zip_result"]
+        actual = storage_archive_client.start_web_restore.call_args[1]["zip_result"]
         assert actual is True
